@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "522121661001",
+    "firebase_url": "https://project-with-andrea.firebaseio.com",
+    "project_id": "project-with-andrea",
+    "storage_bucket": "project-with-andrea.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:522121661001:android:33a5b3c80a762848",
+        "android_client_info": {
+          "package_name": "com.example.project_with_andrea"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "522121661001-0rld4luivc975qmap0u0cbo77h5t7bj6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTAxigXoLdr_EgGuXOCPtFHq2QT2qxrww"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
