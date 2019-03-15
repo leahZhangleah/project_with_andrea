@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'auth.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage();
+  const LoginPage({@required this.baseAuth,@required this.onSignedIn});
+  final BaseAuth baseAuth;
+  final VoidCallback onSignedIn;
 
   @override
   State<StatefulWidget> createState() {
@@ -30,41 +33,16 @@ class _LoginPageState extends State<LoginPage> {
     return false;
   }
 
-  void validateAndSubmitWithFirebase() async {
+  void validateAndSubmitWithFirebase(BuildContext context) async {
     if(validateAndSave()){
       if(formType == FormType.login){
-        try{
-          FirebaseUser firebaseUser = await FirebaseAuth.instance.
-          signInWithEmailAndPassword(email: _email, password: _password);
-          print(firebaseUser.uid);
-        }
-        catch(e){
-          print(e);
-        }
+        widget.baseAuth.signInWithEmailAndPassword(_email, _password);
       }
-      try{
-        FirebaseUser firebaseUser = await FirebaseAuth.instance.
-        createUserWithEmailAndPassword(email: _email, password: _password);
-        print(firebaseUser.uid);
-      }
-      catch (e){
-        print(e);
-      }
+      widget.baseAuth.createUserWithEmailAndPassword(_email, _password);
+      widget.onSignedIn();
     }
   }
 
-  void switchBtwLoginAndCreate(){
-    if(formType == FormType.login){
-      setState(() {
-        formKey.currentState.reset();
-        formType= FormType.create_account;
-      });
-    }
-    setState(() {
-      formKey.currentState.reset();
-      formType= FormType.login;
-    });
-  }
 
   List<Widget> buildInputWidgets(){
     return [
@@ -104,50 +82,68 @@ class _LoginPageState extends State<LoginPage> {
     ];
   }
 
-  List<Widget> buildSubmitWidgets(){
+  List<Widget> buildSubmitWidgets(BuildContext context){
     if(formType == FormType.login){
       return [
         new RaisedButton(
           onPressed: (){
-            validateAndSubmitWithFirebase();
+            validateAndSubmitWithFirebase(context);
           },
           child: new Text('Login'),
         ),
         new FlatButton(
             onPressed: (){
-              switchBtwLoginAndCreate();
+              moveToRegister();
             }, //todo reset state
-            child: new Text('Create a new account.')),
+            child: new Text('Create a new account')),
       ];
     }
     return [
       new RaisedButton(
         onPressed: (){
-          validateAndSubmitWithFirebase();
+          validateAndSubmitWithFirebase(context);
         },
-        child: new Text('Create a new account'),
+        child: new Text('Create an account'),
       ),
       new FlatButton(
           onPressed: (){
-            switchBtwLoginAndCreate();
+            moveToLogin();
           }, //todo reset state
-          child: new Text('Already have an account? Login.')),
+          child: new Text('Already have an account? Login!')),
     ];
-
   }
+
+ void moveToRegister(){
+    setState(() {
+      formType=FormType.create_account;
+      formKey.currentState.reset();
+    });
+ }
+
+ void moveToLogin(){
+    setState(() {
+      formType=FormType.login;
+      formKey.currentState.reset();
+    });
+ }
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return new Container(
-      padding: EdgeInsets.symmetric(horizontal: 16.0),
-      child: Form(
-        key: formKey,
-        child: new Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: buildInputWidgets()+buildSubmitWidgets(),
-        ),
+    return new Scaffold(
+      appBar: AppBar(
+        title: new Text('Sign in'),
       ),
+      body: new Container(
+        padding: EdgeInsets.symmetric(horizontal: 16.0),
+        child: Form(
+          key: formKey,
+          child: new Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: buildInputWidgets()+buildSubmitWidgets(context),
+          ),
+        ),
+      )
     );
 
 
